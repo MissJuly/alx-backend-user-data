@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-Module that contains class Auth
+Authentication module
 """
 from flask import request
-from typing import List,TypeVar
+from typing import List, TypeVar
 import fnmatch
 
 
 class Auth:
     """
-    Authentication class
+    Authentiication class
     """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
-        Method to check if auth is required
+        Method to check  if auth is required.
         """
         if path is None:
             return True
@@ -34,5 +34,5 @@ class Auth:
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """Method to check the current user"""
+        """Method to get user from request"""
         return None

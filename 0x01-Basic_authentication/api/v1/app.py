@@ -43,7 +43,7 @@ def not_found(error) -> str:
 
 @app.before_request
 def authenticate_user():
-    """Authenticate user befor processing"""
+    """Authenticate a user before processing"""
     if auth:
         excluded_paths = [
             '/api/v1/status/',
