@@ -20,6 +20,7 @@ if auth_type == 'auth':
 if auth_type == 'basic_auth':
     auth = BasicAuth()
 
+
 @app.errorhandler(401)
 def unauthorized(error) -> str:
     """unauthorized handler"""
