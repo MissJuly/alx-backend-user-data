@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 """
-Module that contains class BasicAuth
+Basic Authentication module
 """
 import re
 import base64
 import binascii
 from typing import Tuple, TypeVar
-from api.v1.auth.auth import Auth
+from .auth import Auth
 from models.user import User
 
 
 class BasicAuth(Auth):
-    """
-    Basic Authentication class
-    """
+    """Basic authentication class"""
     def extract_base64_authorization_header(
-            self, authorization_header: str) -> str:
+            self,
+            authorization_header: str) -> str:
         """
         Extracts Base64 from authorization header
+        for a Basic Authentication
         """
         if type(authorization_header) == str:
             pattern = r'Basic (?p<token>.+)'
@@ -27,10 +27,12 @@ class BasicAuth(Auth):
         return None
 
     def decode_base64_authorization_header(
-            self, base64_authorization_header: str) -> str:
+            self,
+            base64_authorization_header: str
+            ) -> str:
         """
-        Return the decoded value of a Base64 string
-        base64_authorization_header
+        Returns the decoded value of a Base64 string
+        `base64_authorization_header`
         """
         if type(base64_authorization_header) == str:
             try:
@@ -43,11 +45,12 @@ class BasicAuth(Auth):
                 return None
 
     def extract_user_credentials(
-            self, decoded_base64_authorization_header: str
+            self,
+            decoded_base64_authorization_header: str
             ) -> Tuple[(str, str)]:
         """
-        Return the user email and password from the
-        Base64 decoded value
+        Returns the user email and password from the
+        Base64 decoded value.
         """
         if type(decoded_base64_authorization_header) == str:
             pattern = r'(?p<user>[^:]+):(?p<password>.+)'
@@ -57,14 +60,17 @@ class BasicAuth(Auth):
             )
             if field_match is not None:
                 user = field_match.group('user')
-                password = field_match.group('passowrd')
+                password = field_match.group('password')
                 return user, password
-            return None, None
+        return None, None
 
     def user_object_from_credentials(
-            self, user_email: str, user_pwd: str) -> TypeVar('User'):
+            self,
+            user_email: str,
+            user_pwd: str) -> TypeVar('User'):
         """
-        Returns the User instance based on his email and password
+        Returns the User instance based on his
+        email and password.
         """
         if type(user_email) == str and type(user_pwd) == str:
             try:
@@ -79,7 +85,7 @@ class BasicAuth(Auth):
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
-        Retrieves the User instance for a request
+        Retrieves the user from a request
         """
         auth_header = self.authorization_header(request)
         b64_auth_token = self.extract_base64_authorization_header(auth_header)
