@@ -20,11 +20,11 @@ class Auth:
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
-        """Register a user in the db"""
+        """Registers a user in the db"""
         try:
             user = self._db.find_user_by(email=email)
         except NoResultFound:
-            hashed_password = hashed_password(password)
+            hashed_password = _hash_password(password)
             user = self._db.add_user(email, hashed_password)
 
             return user
