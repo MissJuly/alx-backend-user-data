@@ -42,4 +42,3 @@ class DB:
             self.__session.rollback()
             new_user = None
         return new_user
-
