@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Authentication module"""
 import bcrypt
+from db import DB
 from sqlalchemy.orm.exc import NoResultFound
 from user import User
-from db import DB
-from typing import Union
 from uuid import uuid4
+from typing import Union
 
 
 def _hash_password(password: str) -> str:
@@ -40,7 +40,7 @@ class Auth:
             raise ValueError(f'User (email) already exists')
 
     def valid_login(self, email: str, password: str) -> bool:
-        """Validate login"""
+        """validate login"""
         try:
             user = self._db.find_user_by(email=email)
         except NoResultFound:
@@ -66,7 +66,7 @@ class Auth:
 
         return session_id
 
-    def get_user_from_sessio_id(self, session_id: str) -> Union[str, None]:
+    def get_user_from_session_id(self, session_id: str) -> Union[str, None]:
         """returns string or none"""
         if session_id is None:
             return None

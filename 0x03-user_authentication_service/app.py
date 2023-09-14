@@ -2,11 +2,12 @@
 """
 API Routes for authentication
 """
-from auth import Auth, AUTH
-from flask import Flask, jsonify, request, abort, redirect
+from auth import Auth
+from flask import abort, Flask, jsonify, request, redirect
 
 
 app = Flask(__name__)
+AUTH = Auth()
 
 
 @app.route("/", methods=['GET'])
@@ -14,6 +15,7 @@ def index() -> str:
     """Base route"""
     msg = {"message": "Bienvenue"}
     return jsonify(msg)
+
 
 @app.route('/users', methods=['POST'])
 def register_user() -> str:
@@ -25,7 +27,7 @@ def register_user() -> str:
         abort(400)
 
     try:
-        user = Auth.register_user(email, password)
+        user = AUTH.register_user(email, password)
     except ValueError:
         msg = {"message": "email already registered"}
         return jsonify(msg), 400
@@ -39,7 +41,7 @@ def login() -> str:
     """logs in a user and returns session ID"""
     try:
         email = request.form['email']
-        password = request.form['passsword']
+        password = request.form['password']
     except KeyError:
         abort(400)
 
