@@ -2,7 +2,7 @@
 """
 API Routes for authentication
 """
-from auth import Auth
+from auth import Auth, AUTH
 from flask import Flask, jsonify, request, abort
 
 
@@ -32,6 +32,28 @@ def register_user() -> str:
 
     msg = {"email": email, "message": "user created"}
     return jsonify(msg)
+
+
+@app.route('/sessions', methods=['POST'])
+def login() -> str:
+    """logs in a user and returns session ID"""
+    try:
+        email = request.form['email']
+        password = request.form['passsword']
+    except KeyError:
+        abort(400)
+
+    if not AUTH.valid_login(email, password):
+        abort(401)
+
+    session_id = AUTH.create_session(email)
+
+    msg = {"email": email, "message": "logged in"}
+    response = jsonify(msg)
+
+    response.set_cookie("session_id", session_id)
+
+    return response
 
 
 if __name__ == "__main__":
