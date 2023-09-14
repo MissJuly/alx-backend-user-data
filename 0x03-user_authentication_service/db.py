@@ -36,18 +36,17 @@ class DB:
         """
         Adds a new user to the db
         """
-        try:
-            new_user = User(email=email, hashed_password=hashed_password)
-            self._session.add(new_user)
-            self._session.commit()
-        except Exception as e:
-            self._session.rollback()
-            raise e
-        return new_user
+        user = User(
+            email=email, hashed_password=hashed_password,
+            session_id=None, reset_token=None
+        )
+        self._session.add(user)
+        self._session.commit()
+        return user
 
     def find_user_by(self, **kwargs) -> User:
         """
-        Find a user based on filters
+        Finds a user based on filters
         """
         fields, values = [], []
         for key, value in kwargs.items():
@@ -56,10 +55,9 @@ class DB:
                 values.append(value)
             else:
                 raise InvalidRequestError()
-            result = self._instance.query(User).filter(
-                tuple_(*fields).in_([tuple(values)])
-            ).first()
-            if result is None:
-                raise NoResultFound()
-            return result
-
+        result = self._session.query(User).filter(
+            tuple_(*fields).in_([tuple(values)])
+        ).first()
+        if result is None:
+            raise NoResultFound()
+        return result
